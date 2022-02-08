@@ -1,0 +1,87 @@
+{
+"traceName": "manifold-annotations-v5",
+"uriPattern": "https://manifold.umn.edu/read/[fc03beb6-e670-4746-af17-4bac70ddb764]/section/[873bd50b-aea0-44d1-a5ad-895eba66e1b9]",
+"uriRegex": "https://manifold.umn.edu/read/([^/]+?)/section/([^/]+?)$","actions": {
+"187d2df4c40e1c": {
+    "id": "187d2df4c40e1c",
+    "default_name_set": false,
+    "name": "Starting Resource",
+    "actionName": "load",
+    "selectors": [],
+    "parentId": "187d2df4c40e1c",
+    "locationUrl": "https://manifold.umn.edu/read/fc03beb6-e670-4746-af17-4bac70ddb764/section/873bd50b-aea0-44d1-a5ad-895eba66e1b9",
+    "children": {
+      "2509652615b7af": {
+        "id": "2509652615b7af",
+        "default_name_set": true,
+        "name": "Event 2 (click)",
+        "actionName": "click",
+        "selectors": [
+          {
+            "selector": "span.secondary.annotation-underline.annotation-highlight",
+            "selectorMatches": 1,
+            "selectorOrder": 0,
+            "selectorPreferred": false,
+            "selectorType": "CSSSelector"
+          },
+          {
+            "selector": "span.annotation-underline",
+            "selectorMatches": 1,
+            "selectorOrder": 0,
+            "selectorPreferred": true,
+            "selectorType": "CSSSelector"
+          },
+          {
+            "selector": "//span[contains(@class,'annotation-underline')]",
+            "selectorMatches": 1,
+            "selectorOrder": 1,
+            "selectorPreferred": false,
+            "selectorType": "XPath"
+          }
+        ],
+        "parentId": "187d2df4c40e1c",
+        "children": {
+          "318b4c79fe042": {
+            "id": "318b4c79fe042",
+            "default_name_set": true,
+            "name": "Event 3 (click)",
+            "actionName": "click",
+            "selectors": [
+              {
+                "selector": "button.drawer-bar__close-button",
+                "selectorMatches": 1,
+                "selectorOrder": 0,
+                "selectorPreferred": true,
+                "selectorType": "CSSSelector"
+              },
+              {
+                "selector": "id(\"skip-to-main\")/SPAN[1]/DIV[1]/SECTION[1]/DIV[3]/DIV[2]/DIV[1]/DIV[1]/DIV[1]",
+                "selectorMatches": 1,
+                "selectorOrder": 1,
+                "selectorPreferred": false,
+                "selectorType": "XPath"
+              }
+            ],
+            "parentId": "2509652615b7af",
+            "children": {},
+            "eventOrder": 3,
+            "repeat": {},
+            "frameIndex": "root"
+          }
+        },
+        "eventOrder": 2,
+        "repeat": {
+          "until": {
+            "selectorType": "selectorPreferred",
+            "selectorCondition": "sameselector"
+          }
+        },
+        "frameIndex": "root"
+      }
+    },
+    "eventOrder": 1,
+    "repeat": {},
+    "frameIndex": ""
+  }
+}
+}

@@ -1,0 +1,34 @@
+FROM ubuntu:18.04
+
+RUN apt-get update -qq && \
+    apt-get upgrade -yq && \
+    apt-mark hold openjdk-11-jre-headless && \
+    apt-get install -yq --no-install-recommends  apt-transport-https apt-utils ca-certificates curl git-core gnupg \
+									      jq \
+									 less maven  openjdk-8-jdk-headless  sudo \
+									supervisor  wget tar  emacs zookeeperd
+RUN apt-get install -y libffi-dev libssl-dev python3.6 python3-pip
+#
+# Apache Storm
+#
+ENV STORM_VERSION=1.2.2
+COPY downloads/apache-storm-$STORM_VERSION  /usr/local/apache-storm-$STORM_VERSION
+ENV STORM_HOME /usr/local/apache-storm-$STORM_VERSION
+RUN groupadd storm && \
+    useradd --gid storm --home-dir /home/storm \
+    	    	  --create-home --shell /bin/bash storm && \
+		  chown -R storm:storm $STORM_HOME && \
+		  mkdir /var/log/storm && \
+		  chown -R storm:storm /var/log/storm
+RUN ln -s /var/log/storm $STORM_HOME/logs
+RUN ln -s $STORM_HOME/bin/storm /usr/bin/storm
+ADD etc/supervisor/conf.d/storm-*.conf   /etc/supervisor/conf.d/
+ADD etc/supervisor/conf.d/zookeeper.conf /etc/supervisor/conf.d/
+RUN chmod -R 644 /etc/supervisor/conf.d/*.conf
+
+
+RUN mkdir /warcs
+#WORKDIR /warcs
+
+RUN pip install warcprox
+

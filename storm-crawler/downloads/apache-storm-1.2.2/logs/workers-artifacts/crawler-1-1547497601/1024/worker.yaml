@@ -1,0 +1,4 @@
+worker-id: 1fd03bca-48ad-487e-b26b-a0d0e62bc24e
+logs.users: []
+logs.groups: []
+topology.submitter.user: ludab

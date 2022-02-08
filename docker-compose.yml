@@ -1,0 +1,53 @@
+version: "2"
+
+services:
+   
+
+    
+ tracer-db:
+    image: mysql/mysql-server:5.7
+    #ports:
+    #  - 2306:3306
+    environment:
+      MYSQL_DATABASE: "crawl"
+      MYSQL_USER: "cache"
+      MYSQL_PASSWORD: "plenty"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./storm-crawler/src/mysql/tablesetup.sql:/docker-entrypoint-initdb.d
+    networks:
+      - tracer
+
+
+
+ tracer-browser:
+    build: ./docker-selenium/
+    ports:
+      - "4444:4444"
+    networks:
+      - tracer
+
+ tracer-archiver:
+    build: ./storm-crawler
+    environment:
+     # WARC_PROXY: http://tracer-proxy:8070
+      SELENIUM_ADDRESS: "http://tracer-browser:4444/wd/hub"
+      DB_ADDRESS: http://tracer-db:3306
+
+    #command: storm jar storm-crawler/target/stormcrawler-0.1.jar  -Djava.io.tmpdir=/tmp  org.apache.storm.flux.Flux  -local crawler-docker.flux -s 10000000000
+    command:  storm jar target/stormcapture-0.2.jar  gov.lanl.crawler.SeedInjector ./seeds seedswithtraces.txt   -local -conf crawler-conf-docker.yaml
+    links:
+      - tracer-db
+      - tracer-browser
+    depends_on:
+      
+      - tracer-db
+      - tracer-browser
+     volumes:
+      - ./warcs:/warcs     
+    networks:
+      - tracer
+
+networks:
+  tracer:
+  
