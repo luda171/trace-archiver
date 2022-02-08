@@ -1,0 +1,60 @@
+{
+  "com.digitalpebble.stormcrawler.protocol.selenium.NavigationFilters": [
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "git",
+      "params": {
+         "portalFile": "file:///data/home/ludab/portals-crawler/traces/github.json"  
+       }
+    },
+     {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "slideshare",
+      "params": {
+        "portalFile": "file:///data/home/ludab/portals-crawler/traces/ngslideshare.json" 
+       }
+    },
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "figshare",
+      "params": {
+        "portalFile": "file:///data/home/ludab/portals-crawler/traces/figsharetrace2.json" 
+       }
+    },
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "scholar",
+      "params": {
+        "portalFile": "file:///data/home/ludab/portals-crawler/traces/google.json" 
+       }
+    },
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "manifoldsum",
+      "params": {
+        "portalFile": "minisota.json" 
+       }
+    },
+     {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "manifoldbooks",
+      "params": {
+        "portalFile": "file///data/home/ludab/portals-crawler/traces/manifold.json" 
+       }
+    },
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "manifold",
+      "params": {
+        "portalFile": "file///data/home/ludab/portals-crawler/traces/manifold-one-page-annotations.json"  
+       }
+    },
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "robottxt",
+      "params": {
+        "portalFile": "file:///data/home/ludab/portals-crawler/traces/robot.json" 
+       }
+    }
+  ]
+}

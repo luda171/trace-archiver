@@ -1,0 +1,6 @@
+//header
+https://github.com/mementoweb/SiteStory											    trace=File:///data/home/ludab/portals-crawler/src/main/resources/github.json											    		filter=dynamic.json									    
+https://scholar.google.com/citations?user=9H4a2UIAAAAJ&hl=en								    trace=File:///data/home/ludab/portals-crawler/src/main/resources/google.json													filter=dynamic.json 		    
+https://figshare.com/articles/Table_1_Investigation_of_the_Environmental_Stability_of_Poly_vinyl_alcohol_KOH_Polymer_Electrolytes_for_Flexible_Zinc_Air_Batteries_DOCX/10010681						    trace=File:///data/home/ludab/portals-crawler/src/main/resources/figsharetrace2.json				    filter=dynamic.json
+
+	

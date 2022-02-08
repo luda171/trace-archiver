@@ -10,4 +10,6 @@
 # Learn more about Git LFS for large files:
 #     https://www.atlassian.com/git/tutorials/git-lfs
 target/
-storm-crawler/downloads
+apache-storm-1.2.3/
+warcs/
+certs/
