@@ -28,14 +28,14 @@ services:
       - tracer
 
  tracer-archiver:
-    build: ./storm-crawler
+    build: .
     environment:
      # WARC_PROXY: http://tracer-proxy:8070
       SELENIUM_ADDRESS: "http://tracer-browser:4444/wd/hub"
       DB_ADDRESS: http://tracer-db:3306
 
     #command: storm jar storm-crawler/target/stormcrawler-0.1.jar  -Djava.io.tmpdir=/tmp  org.apache.storm.flux.Flux  -local crawler-docker.flux -s 10000000000
-    command:  storm jar target/stormcapture-0.2.jar  gov.lanl.crawler.SeedInjector ./seeds seedswithtraces.txt   -local -conf crawler-conf-docker.yaml
+    command:  storm jar stormcapture-0.2.jar  gov.lanl.crawler.CrawlTopology    -local -conf crawler-conf-docker.yaml
     links:
       - tracer-db
       - tracer-browser
@@ -43,7 +43,8 @@ services:
       
       - tracer-db
       - tracer-browser
-     
+     volumes:
+      - ./warcs:/warcs     
     networks:
       - tracer
 
