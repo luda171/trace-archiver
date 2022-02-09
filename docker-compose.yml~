@@ -14,7 +14,7 @@ services:
       MYSQL_PASSWORD: "plenty"
     volumes:
       - ./data/mysql:/var/lib/mysql
-      - ./storm-crawler/src/mysql/tablesetup.sql:/docker-entrypoint-initdb.d
+      - ./portals-crawler/src/mysql/tablesetup.sql:/docker-entrypoint-initdb.d
     networks:
       - tracer
 
@@ -44,7 +44,7 @@ services:
       - tracer-db
       - tracer-browser
      volumes:
-      - ./warcs:/warcs     
+      - ./warcs:/tracer-crawler/warcs     
     networks:
       - tracer
 

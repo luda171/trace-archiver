@@ -35,7 +35,7 @@ services:
       DB_ADDRESS: http://tracer-db:3306
 
     #command: storm jar storm-crawler/target/stormcrawler-0.1.jar  -Djava.io.tmpdir=/tmp  org.apache.storm.flux.Flux  -local crawler-docker.flux -s 10000000000
-    command:  storm jar stormcapture-0.2.jar  gov.lanl.crawler.CrawlTopology    -local -conf crawler-conf-docker.yaml
+    command:  storm jar tracer-crawler.jar  gov.lanl.crawler.CrawlTopology    -local -conf crawler-conf-docker.yaml
     links:
       - tracer-db
       - tracer-browser

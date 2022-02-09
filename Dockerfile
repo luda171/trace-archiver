@@ -16,7 +16,7 @@ RUN pip3 install --upgrade pip
 # Apache Storm
 #
 ENV STORM_VERSION=1.2.2
-COPY storm-crawler/downloads/apache-storm-$STORM_VERSION  /usr/local/apache-storm-$STORM_VERSION
+COPY storm-docker-conf/downloads/apache-storm-$STORM_VERSION  /usr/local/apache-storm-$STORM_VERSION
 ENV STORM_HOME /usr/local/apache-storm-$STORM_VERSION
 RUN groupadd storm && \
     useradd --gid storm --home-dir /home/storm \
@@ -44,7 +44,7 @@ RUN pip3 install --user  warcprox==2.3
 #RUN pip3 install git+https://github.com/internetarchive/warcprox.git
 RUN mkdir tmp
 COPY portals-crawler/target/stormcapture-0.2.jar /tracer-crawler/tracer-crawler.jar
-COPY storm-crawler/crawler-conf-docker.yaml /tracer-crawler/crawler-conf-docker.yaml
+COPY storm-docker-conf/crawler-conf-docker.yaml /tracer-crawler/crawler-conf-docker.yaml
 COPY seeds/seedswithtraces.txt  /tracer-crawler/seedswithtraces.txt
 RUN ls -la
 #inject seeds and traces to mysql
