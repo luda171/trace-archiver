@@ -1,11 +1,15 @@
-# Trace-Crawler  based on StormCrawler see https://github.com/DigitalPebble/storm-crawler/wiki. 
+## Trace-Crawler  based on StormCrawler see https://github.com/DigitalPebble/storm-crawler/wiki. 
 Produces WARC files to be stored in ./warcs/warcstore directory.
-
+The plugin to execute the trace  is done thru navigation filter of StormCrawler.
+The trace is a json file where web page navigation steps are recorded in tree-like data structure.
+The navigation filter interprets the json data structure and issues selenium api calls to the selenium hub. Hub is the central point in the Selenium Grid that routes the JSON  commands to the individual browsers-nodes. The Remote Web Driver is configured with proxy, so the http api calls are done with  proxy service, warcprox, to record all traffic to warc files. 
+For each url seed the crawler starts and stops personal proxy when it finishes to make sure that all navigation steps of particular trace and corresponding embedded resources are well separated into a single warc file. Thus this is selective crawling where we want to archive web resource with well defined boundaries.
+The software to create the trace  can be found at https://github.com/mementoweb/tracer-extension
 
 ## Build the Project:
 * if you do not want to use docker go to the portals-crawler directory and follow instructions 
 * or see docker instructions below
-* 
+ 
 ## Compile the trace-crawler
 
  you must first generate an uberjar:
@@ -19,7 +23,7 @@ $ mvn clean package
 
 ## Run Topology on Docker
 A configuration to run the topologies via docker-compose is provided. 
-The file docker-compose.yaml puts every component (Mysql,Apache storm,Warcproxy,Chrome Selenium hub) into  containers.
+The file docker-compose.yaml puts every component (Mysql, Apache storm, Warcproxy, Chrome Selenium hub) into  containers.
 First we launch all components:
 
 
@@ -79,13 +83,9 @@ if you want to bring back url to crawl again  for testing
 ``` sh
 update urls set status='DISCOVERED',nextfetchdate='2018-01-21 15:41:22' where url='https://wormbase.org/species/c_elegans/gene/WBGene00006604#0-9g-3';
 ```
-## Also the Storm UI on localhost is available and will provide metrics about the running topology.
+Also the Storm UI on localhost is available and will provide metrics about the running topology.
 ## Configuration docker-crawler
 the  configuration file at  the file ./storm-docker-conf/crawler-conf-docker.yaml 
-```
-
-   
-```
 * default points out to traces config file
 ``` 
 navigationfilters.config.file: "boundary-filters3.json"
