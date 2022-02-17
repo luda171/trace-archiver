@@ -21,9 +21,9 @@ $ mvn clean package
 
 
 
-## Run Topology on Docker
+## Run trace-crawler Topology on Docker
 A configuration to run the topologies via docker-compose is provided. 
-The file docker-compose.yaml puts every component (Mysql, Apache storm, Warcproxy, Chrome Selenium hub) into  containers.
+The file ./docker-compose.yaml puts every component (Mysql, Apache storm, Warcproxy, Chrome Selenium hub) into  containers.
 First we launch all components:
 
 
@@ -84,10 +84,11 @@ if you want to bring back url to crawl again  for testing
 update urls set status='DISCOVERED',nextfetchdate='2018-01-21 15:41:22' where url='https://wormbase.org/species/c_elegans/gene/WBGene00006604#0-9g-3';
 ```
 Also the Storm UI on localhost is available and will provide metrics about the running topology.
-## Configuration docker-crawler
+## Configuration trace-crawler
 the  configuration file at  the file ./storm-docker-conf/crawler-conf-docker.yaml 
 * default points out to traces config file
 ``` 
 navigationfilters.config.file: "boundary-filters3.json"
   
 ```
+The ./seeds , ./traces, ./warcs, ./data, ./certs directories are shared between docker container and host machine. 
