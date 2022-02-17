@@ -68,6 +68,10 @@ public abstract class SeleniumProtocol extends AbstractHttpProtocol {
 	String host;
 	int port_;
 	String warcdir;
+        String cerdir;
+
+        String warcproxpath;
+        String ppath;
 
 	@Override
 	public void configure(Config conf) {
@@ -77,6 +81,9 @@ public abstract class SeleniumProtocol extends AbstractHttpProtocol {
 		host = ConfUtils.getString(conf, "http.proxy.host", "172.17.0.1");
 		port_ = ConfUtils.getInt(conf, "http.proxy.port", 0);
 		warcdir = ConfUtils.getString(conf, "http.proxy.dir", "./warcs");
+                cerdir = ConfUtils.getString(conf, "http.cert.dir", "certs");
+                warcproxpath = ConfUtils.getString(conf, "warcprox.exec.dir","");
+		ppath = ConfUtils.getString(conf, "python.exec.dir","");
 		filters = NavigationFilters.fromConf(conf);
 		drivers = new LinkedBlockingQueue<>();
 		if (ports==null)     {
@@ -110,10 +117,11 @@ public abstract class SeleniumProtocol extends AbstractHttpProtocol {
 		// String cmd = "/usr/local/bin/warcprox -b 172.17.0.1 -p 8080 --certs-dir certs
 		// -d warcs -g md5 -v --trace -s 2000000000 > out.txt ";
         String warcproxydir = warcdir + "/output" + pport +".db";
-		ProcessBuilder probuilder = new ProcessBuilder("warcprox", "-b", host, "-p", pport, "--certs-dir", "certs",
+	ProcessBuilder probuilder = new ProcessBuilder(ppath,warcproxpath+"warcprox", "-b", host, "-p", pport, "--certs-dir", cerdir,
 				"-d", warcdir + pport, "-g", "md5", "-v", "--trace", "-s", "8000000000", "--dedup-db-file=/dev/null",
-				"--stats-db-file=/dev/null");
+				"--stats-db-file=/dev/null"); 
 		
+	//ProcessBuilder probuilder = new ProcessBuilder("/bin/bash", "-c", "/warcs/test"+pport+".sh");
 	//	ProcessBuilder probuilder = new ProcessBuilder("warcprox", "-b", host, "-p", pport, "--certs-dir", "certs",
 	//			"-d", warcdir + pport, "-g", "md5", "-v", "--trace", "-s", "1000000", "--dedup-db-file=/dev/null",
 	//			"--stats-db-file=/dev/null");
@@ -121,19 +129,26 @@ public abstract class SeleniumProtocol extends AbstractHttpProtocol {
 		
 		try {
 
-			File OutputFile = new File(warcdir + "/output" + pport + ".txt");
+		    //File OutputFile = new File(warcdir + "/output" + pport + ".txt");
+			//File directory = new File(warcdir +  pport );
+                        //if (! directory.exists()){
+			//   directory.mkdir();
+			    // If you require it to make the entire directory path including parents,
+			    // use directory.mkdirs(); here instead.
+			//}
 			probuilder.redirectErrorStream(true);
 			// probuilder.directory(new File(warcdir));
-			probuilder.redirectOutput(OutputFile);
-
+			//probuilder.redirectOutput(OutputFile);
+			probuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+			probuilder.directory(new File(warcdir));
 			Map<String, String> envMap = probuilder.environment();
 
 			// checking map view of environment
-			// for (Map.Entry<String, String> entry : envMap.entrySet()) {
+			 for (Map.Entry<String, String> entry : envMap.entrySet()) {
 			// checking key and value separately
-			// System.out.println("Key = " + entry.getKey() + ", Value = " +
-			// entry.getValue());
-			// }
+			 System.out.println("Key = " + entry.getKey() + ", Value = " +
+			 entry.getValue());
+			 }
 
 			Process p = probuilder.start();
 			p.waitFor(5, TimeUnit.SECONDS);

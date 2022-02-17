@@ -1,53 +1,131 @@
 version: "2"
 
 services:
-   
 
-    
- tracer-db:
+  # Apache Storm components
+  # - Zookeeper coordinates the communication between Nimbus and the Supervisors
+  zookeeper:
+    image: zookeeper:3.6.3
+    container_name: zookeeper
+    restart: always
+    networks:
+      - tracer
+  # - the daemon Nimbus runs on the master node
+  nimbus:
+    image: storm:1.2.4
+    container_name: nimbus
+    ## must override worker.childopts and remove options not available
+    ## for Java 11: `-XX:+PrintGCDateStamps`, etc
+    #command: storm nimbus
+    command: storm nimbus -c    worker.childopts="-Xmx%HEAP-MEM%m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=artifacts/heapdump"
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper
+    ports:
+      - 6627:6627
+    restart: always
+    tty: true
+    networks:
+      - tracer
+    volumes:
+            - ./data/nimbus/logs:/logs
+            - ./data/nimbus/data:/data
+
+  # - the Supervisors run on the worker nodes
+  storm-supervisor:
+    #image: storm:1.2.4
+
+    build: storm-supervisor
+    container_name: storm-supervisor
+    ## must override worker.childopts and remove options not available
+    ## for Java 11: `-XX:+PrintGCDateStamps`, etc
+    #command: storm supervisor 
+    command: storm supervisor -c    worker.childopts="-Xmx%HEAP-MEM%m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=artifacts/heapdump"
+    depends_on:
+      - zookeeper
+      - nimbus
+    #links:
+    #  - zookeeper
+    #  - nimbus
+    restart: always
+    networks:
+      - tracer
+    ports:
+      - 8050:8050
+      - 8051:8051
+      - 8052:8052
+      - 8053:8053
+      - 8054:8054   
+    volumes:
+            - ./data/supervisor/logs:/logs
+            - ./data/supervisor/data:/data
+            - ./warcs:/warcs
+            - ./seeds:/seeds
+            - ./traces:/traces
+            - ./certs:/certs
+           
+  # - the Storm UI provides diagnostics about the Storm cluster
+  storm-ui:
+    #image: storm:${STORM_VERSION:-2.3.0}
+    #image: storm:2.3.0
+    image: storm:1.2.4
+    container_name: storm-ui
+    command: storm ui
+    depends_on:
+      - nimbus
+    links:
+      - nimbus
+    ports:
+      - 8073:8080
+    restart: always
+    networks:
+      - tracer
+
+  # crawler use mysql for url/trace queue   
+  tracer-db:
     image: mysql/mysql-server:5.7
+    container_name: tracer-db
     #ports:
-    #  - 2306:3306
+     # - 2306:3306
     environment:
-      MYSQL_DATABASE: "crawl"
+      MYSQL_DATABASE: "portals"
       MYSQL_USER: "cache"
       MYSQL_PASSWORD: "plenty"
+      MYSQL_ROOT_PASSWORD: "tuber"
     volumes:
       - ./data/mysql:/var/lib/mysql
-      - ./portals-crawler/src/mysql/tablesetup.sql:/docker-entrypoint-initdb.d
+      - ./storm-docker-conf:/docker-entrypoint-initdb.d
     networks:
       - tracer
 
 
-
- tracer-browser:
+  tracer-browser:
     build: ./docker-selenium/
     ports:
-      - "4444:4444"
+      - "4442:4444"
     networks:
       - tracer
 
- tracer-archiver:
+  tracer-archiver:
     build: .
+    container_name: tracer-archiver
     environment:
-     # WARC_PROXY: http://tracer-proxy:8070
+     # WARC_PROXY: http://storm-supervisor:8050
       SELENIUM_ADDRESS: "http://tracer-browser:4444/wd/hub"
       DB_ADDRESS: http://tracer-db:3306
-
-    #command: storm jar storm-crawler/target/stormcrawler-0.1.jar  -Djava.io.tmpdir=/tmp  org.apache.storm.flux.Flux  -local crawler-docker.flux -s 10000000000
-    command:  storm jar tracer-crawler.jar  gov.lanl.crawler.CrawlTopology    -local -conf crawler-conf-docker.yaml
-    links:
-      - tracer-db
-      - tracer-browser
+    command: /bin/bash
     depends_on:
-      
+      - nimbus
       - tracer-db
       - tracer-browser
-     volumes:
-      - ./warcs:/tracer-crawler/warcs     
+    volumes:
+      - ./seeds:/seeds
+      - ./traces:/traces
+     
     networks:
       - tracer
+    restart: "no"
 
 networks:
   tracer:
-  

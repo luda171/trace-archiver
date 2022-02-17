@@ -1,4 +1,4 @@
-name: "crawler"
+name: "tracer-crawler"
 
 includes:
     - resource: true
@@ -17,7 +17,7 @@ spouts:
    #   - [ "https://github.com/mementoweb/node-solid-server/"]
 
   - id: "spout"
-    className: "gov.lanl.crawler.SQLSpoutInput"
+    className: "gov.lanl.crawler.core.SQLSpoutInput"
     parallelism: 1
  #   constructorArgs:
  #     - [ "https://www.slideshare.net/hvdsomp/paul-evan-peters-lecture","https://github.com/mementoweb/node-solid-server/"]
@@ -41,7 +41,7 @@ bolts:
   - id: "status"
     #className: "com.digitalpebble.stormcrawler.persistence.StdOutStatusUpdater"
     #className: "com.digitalpebble.stormcrawler.persistence.MemoryStatusUpdater"
-    className:  "gov.lanl.crawler.StatusUpdaterBolt"
+    className:  "gov.lanl.crawler.core.StatusUpdaterBolt"
     #className:  "com.digitalpebble.stormcrawler.sql.StatusUpdaterBolt"              
     parallelism: 1
 

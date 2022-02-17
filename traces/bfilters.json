@@ -1,0 +1,25 @@
+{
+  "com.digitalpebble.stormcrawler.protocol.selenium.NavigationFilters": [
+    {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "git",
+      "params": {
+         "portalFile": "file:///traces/github.json"
+       }
+    },
+     {
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "slideshare",
+      "params": {
+        "portalFile": "file:///traces/ngslideshare.json"
+       }
+    },
+{
+      "class": "gov.lanl.crawler.boundary.RemotePortalFilter",
+      "name": "robottxt",
+      "params": {
+         "portalFile": "file:///traces/robot.json"
+       }
+    }
+  ]
+}

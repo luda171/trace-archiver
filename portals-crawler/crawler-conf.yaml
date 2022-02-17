@@ -66,6 +66,7 @@ config:
   http.proxy.host: 172.17.0.1
   http.proxy.port: 8070
   http.proxy.dir: "./warcs/warcstore"
+  python.exec.dir: "python3" 
   # storm 
 
   selenium.addresses: "http://172.17.0.2:4444/wd/hub"
