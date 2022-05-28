@@ -26,24 +26,25 @@ public class CrawlTopology extends ConfigurableTopology {
 		  // if we are going to dokerize it better to omit flux and use topology
 	        TopologyBuilder builder = new TopologyBuilder();
 
-	        int numWorkers = ConfUtils.getInt(getConf(), "topology.workers", 1);
-	        int numShards = 1;
+	        //int numWorkers = ConfUtils.getInt(getConf(), "topology.workers", 1);
+	        //int numShards = 1;
 	        
-	        builder.setSpout("spout", new SQLSpoutInput(), numShards);
-	        builder.setBolt("partitioner", new URLPartitionerBolt(), numWorkers).shuffleGrouping("spout");
+	        //builder.setSpout("spout", new SQLSpoutInput(), numShards);
+		builder.setSpout("spout", new SQLSpoutInput());
+	        builder.setBolt("partitioner", new URLPartitionerBolt()).shuffleGrouping("spout");
 	       
-	        builder.setBolt("fetch", new FetcherBolt(), numWorkers).fieldsGrouping("partitioner", new Fields("key"));
+	        builder.setBolt("fetch", new FetcherBolt()).fieldsGrouping("partitioner", new Fields("key"));
             
 	        builder.setBolt("sitemap", new SiteMapParserBolt()).localOrShuffleGrouping("fetch");
             builder.setBolt("parse", new JSoupParserBolt()).localOrShuffleGrouping( "sitemap");
-            builder.setBolt("index", new DummyIndexer(), numWorkers) .localOrShuffleGrouping("fetch");
+            builder.setBolt("index", new DummyIndexer()) .localOrShuffleGrouping("fetch");
             
-            builder.setBolt("status", new StatusUpdaterBolt(), numWorkers)
+            builder.setBolt("status", new StatusUpdaterBolt())
             .localOrShuffleGrouping("fetch", Constants.StatusStreamName)
             .localOrShuffleGrouping("parse", Constants.StatusStreamName)
             .localOrShuffleGrouping("index", Constants.StatusStreamName)
-            .localOrShuffleGrouping("sitemap", Constants.StatusStreamName)
-            .setNumTasks(numShards);
+		.localOrShuffleGrouping("sitemap", Constants.StatusStreamName);
+		//.setNumTasks(numShards);
             return submit("CrawlTopology", conf, builder);
 	       
 	  }

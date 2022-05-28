@@ -1,4 +1,4 @@
-CREATE DATABASE portals;
+CREATE DATABASE IF NOT EXISTS portals;
 use portals;
 
 

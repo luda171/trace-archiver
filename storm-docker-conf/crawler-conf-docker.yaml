@@ -25,6 +25,8 @@ config:
   metadata.transfer:
   # - customMetadataName
     - event
+    - trace
+    - url.path 
   # lists the metadata to persist to storage
   # these are not transfered to the outlinks
   # these are to keep in urls table in metadata column
@@ -34,9 +36,10 @@ config:
   # - error.source
   # - isSitemap
   # - isFeed
-  # - warcs
+   - warcs
   # - event
-  # - trace
+   - url.path 
+   - trace
    - filter
    - discoveryDate
    - lastProcessedDate
@@ -59,15 +62,18 @@ config:
     
   # for crawling through a warc proxy:
   #http.proxy.host: 127.0.0.1
-  http.proxy.host: localhost
+  http.proxy.host: storm-supervisor
   #http.proxy.host: 172.17.0.1
-  http.proxy.port: 8070
-  http.proxy.dir: "./warcs/warcstore"
+  http.proxy.port: 8050
+  http.proxy.dir: "/warcs/warcstore"
+  http.cert.dir: "/certs"
+  warcprox.exec.dir: "/app/env/bin/"
+  python.exec.dir: "/app/env/bin/python3"
   # storm 
 
   #selenium.addresses: "http://172.17.0.1:4444/wd/hub"
   #selenium.addresses: "http://localhost:4444/wd/hub"
-  selenium.addresses:"http://tracer-browser:4444/wd/hub"
+  selenium.addresses: "http://tracer-browser:4444/wd/hub"
   selenium.capabilities: {MaxInstances: 50, takesScreenshot: false,unexpectedAlertBehaviour: accept, loadImages: true, javascriptEnabled: true,browserName : chrome,chromeOptions: {args: ['user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36']},version : 3.11.0-californium} 
  # selenium.instances.num: 1  
  # selenium.setScriptTimeout: 1000
@@ -88,8 +94,8 @@ config:
 
   #parsefilters.config.file: "parsefilters.json"
   #urlfilters.config.file: "urlfilters.json"
-  navigationfilters.config.file: "./traces/boundary-filters.json"
-
+  navigationfilters.config.file: "boundary-filters3.json"
+  #navigationfilters.config.file: "/traces/bfilters.json"
   # revisit a page daily (value in minutes)
   # set it to -1 to never refetch a page //not working for mysql
   # portal urls should not be refetched by second crawler 
@@ -122,7 +128,7 @@ config:
      - class: "org.apache.storm.metric.LoggingMetricsConsumer"
        parallelism.hint: 1
   mysql.nosubtrace: "false"
-  mysql.url: "jdbc:mysql://tracer-db:3306/crawl?autoReconnect=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+  mysql.url: "jdbc:mysql://tracer-db:3306/portals?autoReconnect=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
   mysql.table: "urls"
   mysql.user: "cache"
   mysql.password: "plenty"
