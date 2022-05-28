@@ -1043,7 +1043,7 @@ public class TracePlayer extends AbstractWebDriverEventListener {
 		}
 
 		// if (action.equals(allarea) && repeatNode.isMissingNode()) {
-		if (action.equals("allarea") && norepeat) {
+		if (action.equals(allarea) && norepeat) {
 			// all links in the area click
 			Map sel = getPreferredSelector(parentNode, true);
 			// getBy((String) sel.get("selectorType"), (String) sel.get("selector"));
